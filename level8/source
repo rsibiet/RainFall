@@ -1,0 +1,60 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
+char	*buff[128];
+
+int		main()
+{
+	char 	*service;
+	char 	*auth;
+
+	while (1)
+	{
+		printf("%p, %p \n", auth, service);
+		if (fgets(buff, 128, stdout) != 0)
+		{
+			char	au[6];
+			char	reset[6];
+			char	ser[8];
+			char 	log[6];
+			int i = 0;
+			int	j = 0;
+			
+			au = "auth ";
+			while (au[i] == buff[i])
+				i++;
+			auth = malloc(4);
+			while ((buff + 5)[j] != '\0')
+				j++;
+			j--;
+			if (j <= 30)
+				strcpy(auth, buff + 5]);
+			reset = "reset";
+			i = 0;
+			while (buff[i] == reset[i])
+				i++;
+			if (i >= 5)
+				free(auth);
+			ser = "service";
+			i = 0;
+			while (buff[i] == ser[i])
+				i++;
+			if (i >= 6)
+				service = strdup(buff + 7);
+			log = "login";
+			i = 0;
+			while (buff[i] == log[i])
+				i++;
+			if (i >= 5)
+			{
+				if (*auth + 32 != 0)
+					system("/bin/sh");
+				else
+					fwrite("Password:\n", 1, 10, stdout);
+			}
+		}
+	}
+
+}

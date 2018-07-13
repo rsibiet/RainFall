@@ -1,0 +1,54 @@
+#include <stdlib.h>
+#include <string.h>
+
+
+N::N(int val)
+{
+	nb = val;
+}
+
+void	N::setAnnotation(char *str)
+{
+	memcpy(this->dest, str, strlen(str));
+	return;
+}
+
+N		N::operator+(N&)
+{
+	N res;
+	res.nb = this->nb + N.nb;
+	return res;
+}
+
+N		N::operator-(N&)
+{
+	N res;
+	res.nb = this->nb - N.nb;
+	return res;
+}
+
+N::~N(void) { return ; }
+
+class N
+{
+public:
+	N(int);
+	~N(void);
+
+	N		operator+(N&);
+	N		operator-(N&);
+	void	setAnnotation(char *str);
+
+	int 	nb;
+	char 	dest[104];
+}
+
+int		main(int ac, char *av[])
+{
+	if (ac == 1)
+		exit(1);
+	N *n1 = new N(5);
+	N *n2 = new N(6);
+
+	n2->setAnnotation(av[1]);
+}

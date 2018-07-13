@@ -1,0 +1,24 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int		m = 0;
+
+void	p(char buff[520])
+{
+	printf(buff);
+}
+
+void	n()
+{
+	char buff[520];
+
+	fgets(buff, 512, stdout);
+	p(buff);
+	if (m == 16930116)
+		system("/bin/cat /home/user/level5/.pass");
+}
+
+int		main()
+{
+	n();
+}

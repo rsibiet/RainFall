@@ -1,0 +1,52 @@
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <wchar.h>
+
+int val = 0;
+
+int greetuser(char *s)
+{
+    char *str;
+
+    if (val == 1)
+        str = strdup("Hyvää päivää ");
+    else if (val == 2)
+        str = strdup("Goedemiddag! ");
+    else if (val == 0)
+        str = strdup("Hello ");
+    strcat(str, s);
+    return puts(str);
+}
+
+int main(int ac, char ** av) 
+{
+    int res;
+    int i = 0;
+
+    if (ac != 3)
+        res = 1;
+    else
+    {
+        char str[40];
+        char str2[32];
+        char *lang = getenv("LANG"); 
+        
+        while (i < 19)
+        {
+            str[0] = '\0';
+            i++;
+        }
+        strncpy(str, av[1], 40);
+        strncpy(str2, av[2], 32);
+        if (lang != NULL)
+        {
+            if (memcmp(lang, "fi", 2) == 0) 
+                val = 1;
+            else if (memcmp(lang, "nl", 2) == 0)
+                val = 2;
+        }
+        res = greetuser(av[1]);
+    }
+    return (res);
+}

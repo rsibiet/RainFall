@@ -1,0 +1,44 @@
+Avant de commencer, installer peda sur la VM:
+cd /tmp
+wget http://ropshell.com/peda/peda.tar.gz
+tar -xf peda.tar.gz
+cd ~
+
+ls -l
+gdb level0
+
+
+gbd ./leval0
+source /tmp/peda/peda.py
+set disassembly-flavor intel
+
+Dans gdb:
+
+set disassembly-flavor intel
+start
+disass
+p/d 0x1a7
+
+(gdb) $1 = 423.
+
+On voit qu'à *main+25, aex est comparé a la valeur contenue dans 0x1a7, soit 423.
+
+Si eax est different de 423, le programme jum à *main+152, c'est à dire à la fin du programme, sinon il continu.
+
+jump *main+30: Lance /bin/dash.
+
+On quitte gdb:
+quit
+
+On lance level0 avec 423 en parametre:
+./level0 423
+
+Ca lance /bin/dash.
+whoami
+
+--> level1
+
+cd /home/user/level1
+cat .pass
+
+--> 1fe8a524fa4bec01ca4ea2a869af2a02260d4a7d5fe7e7c24d8617e6dca12d3a

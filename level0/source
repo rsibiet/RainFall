@@ -1,0 +1,25 @@
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <stdio.h>
+
+int      main(int ac, char **av)
+{
+   gid_t gid;
+   uid_t uid;
+   char *tab[2];
+
+   if (atoi(av[1]) == 423)
+   {
+      tab[0] = strdup("/bin/sh");
+      tab[1] = (void *)0;
+         gid = getegid();
+      uid = geteuid();
+      setresgid(gid, gid, gid);
+      setresuid(uid, uid, uid);
+         execv(tab[0], tab);
+   }
+   else
+      fwrite("No !\n", 1, 5, stdout);
+      return (0);
+}

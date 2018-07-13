@@ -1,0 +1,31 @@
+#include <string.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+
+int		main(int ac, char **av)
+{
+	int i = 0;
+	char ptr[66];
+	char *ptr2;
+
+	FILE *file = fopen("/home/user/end/.pass", "r");
+	while (i < 33)
+	{
+		ptr[i] = '\0';
+		i++;
+	}
+	if (file != NULL && ac == 2)
+	{
+		fread(ptr, 66, 1, file);
+		ptr[atoi(av[1])] = 0;
+		fread(ptr2, 1, 65, file);
+		fclose(file);
+		if (strcmp(ptr, av[1]) == 0)
+			execl("/bin/sh", "sh");
+		else
+			puts(&ptr2[66]);
+		return (0);
+	}
+	return (-1);
+}

